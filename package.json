@@ -1,5 +1,6 @@
 {
   "name": "amfi-portfolio-tracker",
+  "version": "1.0.1",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -9,6 +10,10 @@
     "serve": "^14.2.4"
   },
   "scripts": {
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "prestart": "npm run build",
+    "start": "serve -s build -l 0.0.0.0:${PORT:-3000}",
     "start": "serve -s build -l tcp://0.0.0.0:${PORT:-3000}",
     "build": "react-scripts build",
     "dev": "react-scripts start",

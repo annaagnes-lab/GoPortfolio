@@ -1,70 +1,29 @@
-import React, { useEffect, useState } from "react";
-
-export default function App() {
-  const [funds, setFunds] = useState([]);
-  const [selectedFund, setSelectedFund] = useState("");
-  const [units, setUnits] = useState("");
-  const [nav, setNav] = useState(null);
-
-  useEffect(() => {
-    fetch("https://api.allorigins.win/raw?url=https://portal.amfiindia.com/spages/NAVAll.txt")
-      .then((res) => res.text())
-      .then((data) => {
-        const lines = data.split("\n");
-        const parsed = lines
-          .map((line) => {
-            const parts = line.split(";");
-            if (parts.length > 4) {
-              return {
-                schemeName: parts[3],
-                nav: parseFloat(parts[4])
-              };
-            }
-            return null;
-          })
-          .filter(Boolean);
-        setFunds(parsed);
-      });
-  }, []);
-
-  const handleSelect = (e) => {
-    const fundName = e.target.value;
-    setSelectedFund(fundName);
-    const fund = funds.find((f) => f.schemeName === fundName);
-    setNav(fund?.nav || null);
-  };
-
-  const portfolioValue = nav && units ? (nav * units).toFixed(2) : 0;
-
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>AMFI Portfolio Tracker</h2>
-
-      <label>Select Fund:</label>
-      <br />
-      <select value={selectedFund} onChange={handleSelect}>
-        <option value="">-- Select --</option>
-        {funds.map((fund, idx) => (
-          <option key={idx} value={fund.schemeName}>
-            {fund.schemeName}
-          </option>
-        ))}
-      </select>
-
-      <br /><br />
-
-      <label>Units:</label>
-      <br />
-      <input
-        type="number"
-        value={units}
-        onChange={(e) => setUnits(e.target.value)}
-      />
-
-      <br /><br />
-
-      <h3>NAV: {nav || "-"}</h3>
-      <h3>Portfolio Value: ₹ {portfolioValue}</h3>
-    </div>
-  );
+{
+  "name": "amfi-portfolio-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1",
+    "serve": "^14.2.4"
+  },
+  "scripts": {
+    "start": "serve -s build -l tcp://0.0.0.0:${PORT:-3000}",
+    "build": "react-scripts build",
+    "dev": "react-scripts start",
+    "test": "react-scripts test --watchAll=false"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
